@@ -2,8 +2,6 @@ package com.jguru.assignmentui.clientcontroller;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -21,12 +19,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jguru.assignmentui.model.HplFilter;
 import com.jguru.assignmentui.model.HplFilterSort;
 import com.jguru.assignmentui.model.HplPatientMaster;
@@ -40,9 +35,11 @@ import com.jguru.assignmentui.model.HplSort;
 @SpringBootTest
 public class HplPatientClientTest {
 
-	//@InjectMocks
-	HplPatientClient service;
+	@InjectMocks
+	HplPatientClient service1;
 
+	@Mock
+	HplPatientClient service;
 	@Mock
 	HttpRequest request = null;
 
@@ -90,16 +87,7 @@ public class HplPatientClientTest {
 		int limit =3;
 		
 		when(service.getPatientDetails(hplFilterSort,page,limit)).thenReturn(patientResponse);
-//		ObjectMapper Obj = new ObjectMapper();  
-//		String jsonStr = Obj.writeValueAsString(hplFilterSort);
-//		mockMvc.perform(post("/v1/patient/search")
-//				.queryParam("page", "1")
-//				.queryParam("size", "3")
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.content(jsonStr))
-//		// Validate the response code and content type
-//		.andExpect(status().isOk());
-		// Assert the response
+
 		Assertions.assertEquals(2, patientResponse.getTotalRecords(), "should return 2 patients");
 
 	}
@@ -174,7 +162,7 @@ public class HplPatientClientTest {
 		when(service.deletePatient(savePatient.getPatientId())).thenReturn(statusCode);
 		//when(service.addPatient(patient)).thenReturn(patient);
 		// Assert the response
-        Assertions.assertSame("200", statusCode , "StatusCode should be same");
+        Assertions.assertEquals(200, statusCode , "StatusCode should be same");
 
 	}
 
